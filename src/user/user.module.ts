@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
-import { GetUserByIdUseCase } from './useCases/GetUserById/GetUserById.service';
+import { TempUserRepo } from './repo/implementations/tempUserRepo';
 
 @Module({
-  providers: [GetUserByIdUseCase],
-  exports: [GetUserByIdUseCase],
+  providers: [TempUserRepo],
+  exports: [TempUserRepo],
 })
 export class UserModule {}
+
