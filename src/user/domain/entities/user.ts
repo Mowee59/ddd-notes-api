@@ -17,6 +17,14 @@ export class User extends AggregateRoot<UserProps> {
     super(props, id);
   }
 
+  get password (): UserPassword {
+    return this.props.password;
+  }
+
+  get email (): UserEmail {
+    return this.props.email;
+  }
+
   public static create(props: UserProps, id?: UniqueEntityID): Result<User> {
     const guardResult = Guard.againstNullOrUndefined(props.email, 'email');
 
@@ -33,6 +41,8 @@ export class User extends AggregateRoot<UserProps> {
       },
       id,
     );
+
+    
 
     // if (isNewUser) {
     //   user.addDomainEvent(new UserCreated(user));

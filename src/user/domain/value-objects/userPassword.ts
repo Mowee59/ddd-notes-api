@@ -5,7 +5,7 @@ import { Result } from '../../../shared/core/Result';
 
 export interface IUserPassword {
   value: string;
-  hashed: boolean;
+  hashed?: boolean;
 }
 
 export class UserPassword extends ValueObject<IUserPassword> {
