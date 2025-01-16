@@ -17,8 +17,8 @@ export class TempUserRepo implements IUserRepo{
     }).getValue(),
   ];
 
-  exists(userEmail: UserEmail): Promise<boolean> {
-    throw new NotImplementedException('qsdqsd');
+  async exists(userEmail: UserEmail): Promise<boolean> {
+    return this.users.some((user) => user.props.email.equals(userEmail));
   }
 
   async getUserByEmail(userEmail: UserEmail): Promise<User> {
