@@ -1,5 +1,5 @@
 import { Injectable, NotImplementedException } from "@nestjs/common";
-import { IUserRepo } from "../userRepo";
+import { IUserRepo } from "../../domain/interfaces/user-repository.interface";
 import { User } from "src/user/domain/entities/user";
 import { UserEmail } from "src/user/domain/value-objects/userEmail";
 import { UserPassword } from "src/user/domain/value-objects/userPassword";

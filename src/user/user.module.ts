@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { TempUserRepo } from './repo/implementations/tempUserRepo';
-import { LoginUseCase } from './useCases/login/login.usecase';
+import { TempUserRepo } from './infrastructure/persistence/tempUserRepo';
+import { LoginUseCase } from './application/useCases/login/login.usecase';
 
 @Module({
   providers: [ {

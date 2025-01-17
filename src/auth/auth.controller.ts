@@ -5,7 +5,7 @@ import {
   HttpStatus,
   NotImplementedException,
 } from '@nestjs/common';
-import { LoginUseCase } from 'src/user/useCases/login/login.usecase';
+import { LoginUseCase } from 'src/user/application/useCases/login/login.usecase';
 
 @Controller('auth')
 export class AuthController {
