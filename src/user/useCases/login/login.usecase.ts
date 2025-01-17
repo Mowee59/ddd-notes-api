@@ -9,48 +9,52 @@ import { Result, Either, left, right } from 'src/shared/core/Result';
 import { LoginUseCaseErrors } from './login-error';
 import { AppError } from 'src/shared/core/AppError';
 
-type Response = Either<LoginUseCaseErrors.UserNotFoundError | AppError.UnexpectedError, any>;
+type Response = Either<
+  | LoginUseCaseErrors.UserNotFoundError
+  | LoginUseCaseErrors.PasswordIncorrectError
+  | AppError.UnexpectedError,
+  any
+>;
 
 @Injectable()
-export class LoginUseCase implements UseCase<LoginDTO, any>{
- 
-  constructor(@Inject('IUserRepo') private readonly userRepo: IUserRepo){} 
+export class LoginUseCase implements UseCase<LoginDTO, Promise<Response>> {
+  constructor(@Inject('IUserRepo') private readonly userRepo: IUserRepo) {}
 
- async execute(request: LoginDTO) {
-  let user : User;
-  let userEmail: UserEmail;
-  let password:  UserPassword;
+  async execute(request: LoginDTO): Promise<Response> {
+    let user: User;
+    let userEmail: UserEmail;
+    let password: UserPassword;
 
-  try {
-    const userEmailOrError = UserEmail.create(request.email);
-    const passwordOrError = UserPassword.create({value: request.password});
-    const result = Result.combine([userEmailOrError, passwordOrError]);
+    try {
+      const userEmailOrError = UserEmail.create(request.email);
+      const passwordOrError = UserPassword.create({ value: request.password });
+      const result = Result.combine([userEmailOrError, passwordOrError]);
 
-    if(result.isFailure){
-      return left(Result.fail<any>(result.getErrorValue()));
+      if (result.isFailure) {
+        return left(Result.fail<any>(result.getErrorValue()));
+      }
+
+      userEmail = userEmailOrError.getValue();
+      password = passwordOrError.getValue();
+
+      user = await this.userRepo.getUserByEmail(userEmail);
+
+      const userFound = !!user;
+
+      if (!userFound) {
+        return left(new LoginUseCaseErrors.UserNotFoundError());
+      }
+
+      const passwordValid = await user.password.comparePassword(password.value);
+
+      if (!passwordValid) {
+        console.log('password incorrect');
+        return left(new LoginUseCaseErrors.PasswordIncorrectError());
+      }
+
+      return right('ok');
+    } catch (error) {
+      return left(new AppError.UnexpectedError(error.toString()));
     }
-
-    userEmail = userEmailOrError.getValue();
-    password = passwordOrError.getValue();
-
-    user = await this.userRepo.getUserByEmail(userEmail);
-    
-    const userFound = !!user;
-
-    if(!userFound){
-      return left(new LoginUseCaseErrors.UserNotFoundError());
-    }
-
-    const passwordValid = await user.password.comparePassword(password.value);
-    
-    if(!passwordValid){
-      return left(new LoginUseCaseErrors.PasswordIncorrectError());
-    }
-
-    return right('ok');
-  } catch (error) {
-    return left(new AppError.UnexpectedError(error.tostring()));
   }
- }
 }
-

@@ -1,13 +1,21 @@
-import { Controller, HttpCode, HttpStatus, NotImplementedException, Post } from '@nestjs/common';
-import { LoginUseCase } from './login/login.usecase';
+import {
+  Controller,
+  Post,
+  HttpCode,
+  HttpStatus,
+  NotImplementedException,
+} from '@nestjs/common';
+import { LoginUseCase } from 'src/user/useCases/login/login.usecase';
+
 @Controller('auth')
 export class AuthController {
+  constructor(private readonly loginUseCase: LoginUseCase) {}
 
-  constructor(private readonly loginUseCase: LoginUseCase){}
-
-  @HttpCode(HttpStatus.OK)
   @Post('login')
-  login(){
-    throw new NotImplementedException('not implemented yet');
+  public async login() {
+    this.loginUseCase.execute({
+      email: 'test@test.com',
+      password: 'tzeazeest',
+    });
   }
 }
