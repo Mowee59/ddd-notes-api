@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { UseCase } from 'src/shared/core/UseCase';
-import { LoginDTO } from '../../dtos/login-dto';
+import { LoginDTO } from '../../../../user/application/dtos/login-dto';
 import { IUserRepo } from 'src/user/domain/interfaces/user-repository.interface';
 import { User } from 'src/user/domain/entities/user';
 import { UserEmail } from 'src/user/domain/value-objects/userEmail';
@@ -10,6 +10,7 @@ import { LoginUseCaseErrors } from './login-error';
 import { AppError } from 'src/shared/core/AppError';
 
 type Response = Either<
+  | LoginUseCaseErrors.InvalidCredentialsError
   | LoginUseCaseErrors.UserNotFoundError
   | LoginUseCaseErrors.PasswordIncorrectError
   | AppError.UnexpectedError,
@@ -30,17 +31,23 @@ export class LoginUseCase implements UseCase<LoginDTO, Promise<Response>> {
       const passwordOrError = UserPassword.create({ value: request.password });
       const result = Result.combine([userEmailOrError, passwordOrError]);
 
+
       if (result.isFailure) {
-        return left(Result.fail<any>(result.getErrorValue()));
+        return left(new LoginUseCaseErrors.InvalidCredentialsError());
       }
+      
 
       userEmail = userEmailOrError.getValue();
       password = passwordOrError.getValue();
 
+   
+
       user = await this.userRepo.getUserByEmail(userEmail);
 
-      const userFound = !!user;
+ 
 
+      const userFound = !!user;
+      
       if (!userFound) {
         return left(new LoginUseCaseErrors.UserNotFoundError());
       }

@@ -24,7 +24,7 @@ export class TempUserRepo implements IUserRepo{
   async getUserByEmail(userEmail: UserEmail): Promise<User> {
     const user = this.users.find((user) => user.props.email.equals(userEmail));
     if (!user) {
-      throw new Error('User not found');
+      return null;
     }
     return user;
   }
