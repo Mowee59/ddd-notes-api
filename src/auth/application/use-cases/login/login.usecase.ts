@@ -59,7 +59,7 @@ export class LoginUseCase implements UseCase<LoginDTO, Promise<Response>> {
         return left(new LoginUseCaseErrors.PasswordIncorrectError());
       }
 
-      return right('ok');
+      return right(user);
     } catch (error) {
       return left(new AppError.UnexpectedError(error.toString()));
     }

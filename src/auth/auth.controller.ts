@@ -19,8 +19,8 @@ export class AuthController {
   @Post('login')
   public async login() {
     const result = await this.loginUseCase.execute({
-      email: 'tessdt.com',
-      password: 'pqassword',
+      email: 'test@test.com',
+      password: 'password',
     });
 
     if (result.isLeft()) {
@@ -49,7 +49,8 @@ export class AuthController {
     } else if (result.isRight()) {
       return {
         status: HttpStatus.OK,
-        message: result.value
+        message: 'Login successful',
+        user: result.value
       };
     }
   }
