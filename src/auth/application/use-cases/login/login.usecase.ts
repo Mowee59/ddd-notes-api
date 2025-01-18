@@ -6,7 +6,7 @@ import { User } from 'src/user/domain/entities/user';
 import { UserEmail } from 'src/user/domain/value-objects/userEmail';
 import { UserPassword } from 'src/user/domain/value-objects/userPassword';
 import { Result, Either, left, right } from 'src/shared/core/Result';
-import { LoginUseCaseErrors } from './login-error';
+import { LoginUseCaseErrors } from './login-errors';
 import { AppError } from 'src/shared/core/AppError';
 
 type Response = Either<
@@ -31,23 +31,17 @@ export class LoginUseCase implements UseCase<LoginDTO, Promise<Response>> {
       const passwordOrError = UserPassword.create({ value: request.password });
       const result = Result.combine([userEmailOrError, passwordOrError]);
 
-
       if (result.isFailure) {
         return left(new LoginUseCaseErrors.InvalidCredentialsError());
       }
-      
 
       userEmail = userEmailOrError.getValue();
       password = passwordOrError.getValue();
 
-   
-
       user = await this.userRepo.getUserByEmail(userEmail);
 
- 
-
       const userFound = !!user;
-      
+
       if (!userFound) {
         return left(new LoginUseCaseErrors.UserNotFoundError());
       }

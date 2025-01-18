@@ -8,8 +8,8 @@ import { AggregateRoot } from 'src/shared/domain/AggrehateRoot';
 interface UserProps {
   email: UserEmail;
   password: UserPassword;
-  colorPreference: 'light' | 'dark' | 'system';
-  fontPreference: 'sans-serif' | 'serif' | 'monospace';
+  colorPreference?: 'light' | 'dark' | 'system';
+  fontPreference?: 'sans-serif' | 'serif' | 'monospace';
 }
 
 export class User extends AggregateRoot<UserProps> {
@@ -17,11 +17,11 @@ export class User extends AggregateRoot<UserProps> {
     super(props, id);
   }
 
-  get password (): UserPassword {
+  get password(): UserPassword {
     return this.props.password;
   }
 
-  get email (): UserEmail {
+  get email(): UserEmail {
     return this.props.email;
   }
 
@@ -36,13 +36,11 @@ export class User extends AggregateRoot<UserProps> {
     const user = new User(
       {
         ...props,
-        colorPreference: props.colorPreference || 'system', 
+        colorPreference: props.colorPreference || 'system',
         fontPreference: props.fontPreference || 'sans-serif',
       },
       id,
     );
-
-    
 
     // if (isNewUser) {
     //   user.addDomainEvent(new UserCreated(user));

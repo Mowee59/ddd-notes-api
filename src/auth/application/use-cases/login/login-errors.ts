@@ -4,7 +4,6 @@ import { Result } from 'src/shared/core/Result';
 // TODO implemente email not found
 
 export namespace LoginUseCaseErrors {
-
   export class InvalidCredentialsError extends Result<UseCaseError> {
     constructor() {
       super(false, {
