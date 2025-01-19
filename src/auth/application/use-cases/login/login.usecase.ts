@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { UseCase } from 'src/shared/core/UseCase';
-import { LoginDTO } from '../../../../user/application/dtos/login-dto';
+import { LoginDTO } from './login-dto';
 import { IUserRepo } from 'src/user/domain/interfaces/user-repository.interface';
 import { User } from 'src/user/domain/entities/user';
 import { UserEmail } from 'src/user/domain/value-objects/userEmail';

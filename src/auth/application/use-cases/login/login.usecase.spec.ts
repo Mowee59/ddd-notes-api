@@ -3,7 +3,7 @@ import { LoginUseCase } from './login.usecase';
 import { IUserRepo } from 'src/user/domain/interfaces/user-repository.interface';
 import { LoginUseCaseErrors } from './login-errors';
 import { User } from 'src/user/domain/entities/user';
-import { LoginDTO } from 'src/user/application/dtos/login-dto';
+import { LoginDTO } from 'src/auth/application/use-cases/login/login-dto';
 import { Test } from '@nestjs/testing';
 import { UserEmail } from 'src/user/domain/value-objects/userEmail';
 import { UserPassword } from 'src/user/domain/value-objects/userPassword';
@@ -129,7 +129,7 @@ describe('LoginUseCase', () => {
 
     expect(response.isRight()).toBe(true);
     expect(response.value).toBeInstanceOf(User);
-    
+
     expect(response.value).toBe(user);
   });
 });
