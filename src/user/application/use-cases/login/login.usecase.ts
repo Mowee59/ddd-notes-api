@@ -8,6 +8,7 @@ import { UserPassword } from 'src/user/domain/value-objects/userPassword';
 import { Result, Either, left, right } from 'src/shared/core/Result';
 import { LoginUseCaseErrors } from './login-errors';
 import { AppError } from 'src/shared/core/AppError';
+import { AuthService } from 'src/user/auth/auth.service';
 
 type Response = Either<
   | LoginUseCaseErrors.InvalidCredentialsError
@@ -19,7 +20,10 @@ type Response = Either<
 
 @Injectable()
 export class LoginUseCase implements UseCase<LoginDTO, Promise<Response>> {
-  constructor(@Inject('IUserRepo') private readonly userRepo: IUserRepo) {}
+  constructor(
+    @Inject('IUserRepo') private readonly userRepo: IUserRepo,
+    private readonly authService: AuthService,
+  ) {}
 
   async execute(request: LoginDTO): Promise<Response> {
     let user: User;
@@ -48,10 +52,17 @@ export class LoginUseCase implements UseCase<LoginDTO, Promise<Response>> {
 
       const passwordValid = await user.password.comparePassword(password.value);
 
+      // TODO rename this error for something more understandable and remove the console.log
       if (!passwordValid) {
         console.log('password incorrect');
         return left(new LoginUseCaseErrors.PasswordIncorrectError());
       }
+
+      // TODO add isEmailVerified
+      const accessToken = this.authService.sign({
+        userId: user.id.toString(),
+        email: user.email.value,
+      });
 
       return right(user);
     } catch (error) {

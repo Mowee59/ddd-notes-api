@@ -1,11 +1,20 @@
-import { Module } from '@nestjs/common';
-import { LoginUseCase } from '../application/use-cases/login/login.usecase';
+import { forwardRef, Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { UserModule } from 'src/user/user.module';
+import { AuthService } from './auth.service';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports: [UserModule],
-  providers: [LoginUseCase],
+  imports: [
+    forwardRef(() => UserModule),
+    JwtModule.register({
+      global: true,
+      secret: 'secret',
+      signOptions: { expiresIn: '1d' },
+    }),
+  ],
+  providers: [AuthService],
   controllers: [AuthController],
+  exports: [AuthService],
 })
 export class AuthModule {}
