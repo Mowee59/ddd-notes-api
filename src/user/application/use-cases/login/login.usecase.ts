@@ -9,13 +9,14 @@ import { Result, Either, left, right } from 'src/shared/core/Result';
 import { LoginUseCaseErrors } from './login-errors';
 import { AppError } from 'src/shared/core/AppError';
 import { AuthService } from 'src/user/application/services/auth/auth.service';
+import { LoginDTOResponse } from './login-dto-response';
 
 type Response = Either<
   | LoginUseCaseErrors.InvalidCredentialsError
   | LoginUseCaseErrors.UserNotFoundError
   | LoginUseCaseErrors.PasswordIncorrectError
   | AppError.UnexpectedError,
-  any
+  LoginDTOResponse
 >;
 
 @Injectable()
@@ -59,12 +60,15 @@ export class LoginUseCase implements UseCase<LoginDTO, Promise<Response>> {
       }
 
       // TODO add isEmailVerified
-      const accessToken = this.authService.sign({
-        userId: user.id.toString(),
+      const accessToken = await this.authService.signJWT({
+        sub: user.id.toString(),
         email: user.email.value,
       });
 
-      return right(user);
+      return right({
+        accessToken,
+        userEmail: user.email.value,
+      });
     } catch (error) {
       return left(new AppError.UnexpectedError(error.toString()));
     }

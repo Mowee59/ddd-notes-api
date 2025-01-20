@@ -1,13 +1,15 @@
-import { Controller, Post, HttpStatus } from '@nestjs/common';
+import { Controller, Post, HttpStatus, Res } from '@nestjs/common';
 import { LoginUseCase } from '../../../application/use-cases/login/login.usecase';
 import { LoginUseCaseErrors } from '../../../application/use-cases/login/login-errors';
+import { response } from 'express';
 
+// TODO : implement response consistent format
 @Controller('auth')
 export class AuthController {
   constructor(private readonly loginUseCase: LoginUseCase) {}
 
   @Post('login')
-  public async login() {
+  public async login(@Res() response) {
     const result = await this.loginUseCase.execute({
       email: 'test@test.com',
       password: 'password',
@@ -36,12 +38,8 @@ export class AuthController {
             message: result.value.getErrorValue().message,
           };
       }
-    } else if (result.isRight()) {
-      return {
-        status: HttpStatus.OK,
-        message: 'Login successful',
-        user: result.value,
-      };
     }
+
+    return response.status(HttpStatus.OK).json(result.value);
   }
 }

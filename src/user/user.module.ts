@@ -5,6 +5,7 @@ import { AuthService } from './application/services/auth/auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './presentation/controllers/auth/auth.controller';
 
+// TODO :  Use a secret key from env
 @Module({
   imports: [
     JwtModule.register({
