@@ -8,7 +8,7 @@ import { UserPassword } from 'src/user/domain/value-objects/userPassword';
 import { Result, Either, left, right } from 'src/shared/core/Result';
 import { LoginUseCaseErrors } from './login-errors';
 import { AppError } from 'src/shared/core/AppError';
-import { AuthService } from 'src/user/auth/auth.service';
+import { AuthService } from 'src/user/application/services/auth/auth.service';
 
 type Response = Either<
   | LoginUseCaseErrors.InvalidCredentialsError

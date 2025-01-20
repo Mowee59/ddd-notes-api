@@ -1,6 +1,6 @@
 import { Controller, Post, HttpStatus } from '@nestjs/common';
-import { LoginUseCase } from '../application/use-cases/login/login.usecase';
-import { LoginUseCaseErrors } from '../application/use-cases/login/login-errors';
+import { LoginUseCase } from '../../../application/use-cases/login/login.usecase';
+import { LoginUseCaseErrors } from '../../../application/use-cases/login/login-errors';
 
 @Controller('auth')
 export class AuthController {
