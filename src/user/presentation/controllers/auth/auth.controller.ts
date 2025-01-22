@@ -1,9 +1,6 @@
 import { Controller, Post, HttpStatus, Res, Body, ValidationPipe, HttpException, UseInterceptors } from '@nestjs/common';
 import { LoginUseCase } from '../../../application/use-cases/login/login.usecase';
 import { LoginUseCaseErrors } from '../../../application/use-cases/login/login-errors';
-import { LoginDTO } from '../../../application/use-cases/login/login-dto';
-import { LoginDTOResponse } from 'src/user/application/use-cases/login/login-dto-response';
-import { JsonApiResponse } from 'src/shared/api/JsonApiResponse.interface.';
 import { ResponseInterceptor } from 'src/shared/infrastructure/interceptors/response.interceptor';
 import { LoginRequestDTO } from './login.request.dto';
 import { ApiResponse } from '@nestjs/swagger';

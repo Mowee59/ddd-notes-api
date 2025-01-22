@@ -1,6 +1,7 @@
+
+// TODO : When password is empty = 500 error, correct this
 POST http://localhost:3000/auth/login
 content-type: application/json
-
 {
   "email": "test@tazeest.com",
   "password": ""
