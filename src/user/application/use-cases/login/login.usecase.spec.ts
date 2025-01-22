@@ -7,7 +7,6 @@ import { LoginDTO } from 'src/user/application/use-cases/login/login-dto';
 import { Test } from '@nestjs/testing';
 import { UserEmail } from 'src/user/domain/value-objects/userEmail';
 import { UserPassword } from 'src/user/domain/value-objects/userPassword';
-import { Result } from 'src/shared/core/Result';
 
 describe('LoginUseCase', () => {
   let loginUseCase: LoginUseCase;
