@@ -6,6 +6,9 @@ import { LoginDTOResponse } from 'src/user/application/use-cases/login/login-dto
 import { JsonApiResponse } from 'src/shared/api/JsonApiResponse.interface.';
 import { ResponseInterceptor } from 'src/shared/infrastructure/interceptors/response.interceptor';
 import { LoginRequestDTO } from './login.request.dto';
+import { ApiResponse } from '@nestjs/swagger';
+import { LoginResponseDTO } from './Login.response.dto';
+import { ApiOperation } from '@nestjs/swagger';
 
 
 // TODO : implement response consistent format
@@ -17,6 +20,30 @@ export class AuthController {
 
   
   @Post('login')
+  @ApiOperation({ summary: 'Login user' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'User logged in successfully',
+    type: LoginResponseDTO,
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Invalid credentials provided',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'User not found',
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Password incorrect',
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'Internal server error',
+  })
+ // TODO : Add error for excessive fields
+
   public async login( @Body(ValidationPipe) loginDto: LoginRequestDTO) {
     const result = await this.loginUseCase.execute(loginDto);
 

@@ -3,9 +3,23 @@ import { AppModule } from './app.module';
 import { ResponseInterceptor } from './shared/infrastructure/interceptors/response.interceptor';
 import { HttpExceptionFilter } from './shared/infrastructure/filters/http-exception.filter';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
+import { DocumentBuilder } from '@nestjs/swagger';
+import { SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // Swagger setup
+  const config = new DocumentBuilder()
+    .setTitle('DDD Notes API')
+    .setDescription('The Notes API description')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
+  
+  // Validation pipe
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
     forbidNonWhitelisted: true,
@@ -17,8 +31,11 @@ async function bootstrap() {
       }
     }
   }));
+  // Response interceptor
   app.useGlobalInterceptors(new ResponseInterceptor());
+  // Exception filter
   app.useGlobalFilters(new HttpExceptionFilter());
+
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
