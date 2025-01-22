@@ -5,6 +5,7 @@ import { LoginDTO } from '../../../application/use-cases/login/login-dto';
 import { LoginDTOResponse } from 'src/user/application/use-cases/login/login-dto-response';
 import { JsonApiResponse } from 'src/shared/api/JsonApiResponse.interface.';
 import { ResponseInterceptor } from 'src/shared/infrastructure/interceptors/response.interceptor';
+import { LoginRequestDTO } from './login.request.dto';
 
 
 // TODO : implement response consistent format
@@ -16,7 +17,7 @@ export class AuthController {
 
   
   @Post('login')
-  public async login( @Body() loginDto: LoginDTO) {
+  public async login( @Body(ValidationPipe) loginDto: LoginRequestDTO) {
     const result = await this.loginUseCase.execute(loginDto);
 
     if (result.isLeft()) {
