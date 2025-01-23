@@ -20,6 +20,7 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
   
   // Validation pipe
+  // TODO : Create a better error handling for validation errors
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
     forbidNonWhitelisted: true,
@@ -29,6 +30,8 @@ async function bootstrap() {
         const invalidFields = nonWhitelistedErrors.map(error => error.property).join(', ');
         throw new BadRequestException(`Invalid fields detected: ${invalidFields}`);
       }
+
+      throw new BadRequestException('Empty fields are not allowed');
     }
   }));
   // Response interceptor

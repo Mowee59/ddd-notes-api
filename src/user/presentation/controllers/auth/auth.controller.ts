@@ -8,6 +8,7 @@ import { LoginResponseDTO } from './Login.response.dto';
 import { ApiOperation } from '@nestjs/swagger';
 
 
+
 // TODO : implement response consistent format
 @Controller('auth')
 @UseInterceptors(ResponseInterceptor)
@@ -41,20 +42,29 @@ export class AuthController {
   })
  // TODO : Add error for excessive fields
 
-  public async login( @Body(ValidationPipe) loginDto: LoginRequestDTO) {
+  public async login( @Body(ValidationPipe) loginDto: LoginRequestDTO) : Promise<LoginResponseDTO> {
     const result = await this.loginUseCase.execute(loginDto);
 
     if (result.isLeft()) {
-      const errorMap = {
-        [LoginUseCaseErrors.InvalidCredentialsError.name]: HttpStatus.BAD_REQUEST,
-        [LoginUseCaseErrors.UserNotFoundError.name]: HttpStatus.NOT_FOUND,
-        [LoginUseCaseErrors.PasswordIncorrectError.name]: HttpStatus.UNAUTHORIZED,
-      };
+      const error = result.value;
+      let statusCode: HttpStatus;
 
+      switch (error.constructor) {
+        case LoginUseCaseErrors.InvalidCredentialsError:
+          statusCode = HttpStatus.BAD_REQUEST;
+          break;
+        case LoginUseCaseErrors.UserNotFoundError:
+          statusCode = HttpStatus.NOT_FOUND;
+          break;
+        case LoginUseCaseErrors.PasswordIncorrectError:
+          statusCode = HttpStatus.UNAUTHORIZED;
+          break;
+        default:
+          statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
+      }
 
-      const statusCode = errorMap[result.value.constructor.name] || HttpStatus.INTERNAL_SERVER_ERROR;
       throw new HttpException(
-        result.value.getErrorValue().message,
+        error.getErrorValue().message,
         statusCode
       );
     }
