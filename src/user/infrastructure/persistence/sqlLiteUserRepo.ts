@@ -8,6 +8,7 @@ import { LibSQLDatabase } from "drizzle-orm/libsql";
 import * as schema from "src/drizzle/schemas";
 import { UserMap } from "src/user/mappers/userMap";
 import { eq } from "drizzle-orm";
+import { UserId } from "src/user/domain/value-objects/userId";
 
 
 @Injectable()
@@ -40,6 +41,19 @@ export class SqlLiteUserRepo implements IUserRepo {
   
     return UserMap.toDomain(baseUser);
  }
+
+ async getUserById(userId: UserId): Promise<User> {
+  const baseUser = await this.db.select()
+    .from(this.userModel)
+    .where(eq(this.userModel.base_user_id, userId.getStringValue()))
+    .get();
+
+    if (!baseUser) {
+      return null;
+    }
+
+    return UserMap.toDomain(baseUser);
+ }  
 
  async save(user: User): Promise<void> {
   const exists : Boolean = await this.exists(user.props.email);

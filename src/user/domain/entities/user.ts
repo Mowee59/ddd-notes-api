@@ -40,6 +40,10 @@ export class User extends AggregateRoot<UserProps> {
     return this.props.refreshToken;
   }
 
+  public isLoggedIn (): boolean {
+    return !!this.props.accessToken && !!this.props.refreshToken
+  }
+
   public static create(props: UserProps, id?: UniqueEntityID): Result<User> {
     const guardResult = Guard.againstNullOrUndefined(props.email, 'email');
 
