@@ -1,19 +1,22 @@
-import { Controller, Post, HttpStatus, Res, Body, ValidationPipe, HttpException, UseInterceptors } from '@nestjs/common';
+import { Controller, Post, HttpStatus, Res, Body, ValidationPipe, HttpException, UseInterceptors, NotImplementedException } from '@nestjs/common';
 import { LoginUseCase } from '../../../application/use-cases/login/login.usecase';
-import { LoginUseCaseErrors } from '../../../application/use-cases/login/login-errors';
+import { LoginUseCaseErrors } from '../../../application/use-cases/login/login.errors';
 import { ResponseInterceptor } from 'src/shared/infrastructure/interceptors/response.interceptor';
 import { LoginRequestDTO } from './login.request.dto';
 import { ApiResponse } from '@nestjs/swagger';
-import { LoginResponseDTO } from './Login.response.dto';
+import { LoginResponseDTO } from './login.response.dto';
 import { ApiOperation } from '@nestjs/swagger';
-
-
+import { RegisterRequestDTO } from './register.request.dto';
+import { CreateUserUseCase } from '../../../application/use-cases/create-user/create-user.usecase';
+import { CreateUserUseCaseErrors } from 'src/user/application/use-cases/create-user/create-user.errors';
 
 // TODO : implement response consistent format
 @Controller('auth')
 @UseInterceptors(ResponseInterceptor)
 export class AuthController {
-  constructor(private readonly loginUseCase: LoginUseCase) {}
+  constructor(
+    private readonly loginUseCase: LoginUseCase, 
+    private readonly createUserUseCase: CreateUserUseCase) {}
 
 
   
@@ -71,4 +74,31 @@ export class AuthController {
 
     return result.value;
   }
+
+  @Post('register')
+  @ApiOperation({ summary: 'Register user' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'User registered successfully',
+  })
+  public async register(@Body(ValidationPipe) registerDto: RegisterRequestDTO) : Promise<void> { 
+    console.log(registerDto)
+    const result = await this.createUserUseCase.execute(registerDto);
+
+    if (result.isLeft()) {
+      const error = result.value;
+      let statusCode: HttpStatus;
+
+      switch (error.constructor) {
+        case CreateUserUseCaseErrors.UserAlreadyExistsError:
+          statusCode = HttpStatus.BAD_REQUEST;
+          break;
+      }
+      throw new HttpException(result.value.getErrorValue().message, HttpStatus.BAD_REQUEST);
+    }
+
+    return;
+
+  }
+  
 }

@@ -6,16 +6,18 @@ import { User } from 'src/user/domain/entities/user';
 import { UserEmail } from 'src/user/domain/value-objects/userEmail';
 import { UserPassword } from 'src/user/domain/value-objects/userPassword';
 import { Result, Either, left, right } from 'src/shared/core/Result';
-import { LoginUseCaseErrors } from './login-errors';
+import { LoginUseCaseErrors } from './login.errors';
 import { AppError } from 'src/shared/core/AppError';
 import { AuthService } from 'src/user/application/services/auth/auth.service';
 import { LoginDTOResponse } from './login-dto-response';
 
+// TODO : See if need for try catch to handle unexpected errors
+
 type Response = Either<
-  | LoginUseCaseErrors.InvalidCredentialsError
-  | LoginUseCaseErrors.UserNotFoundError
-  | LoginUseCaseErrors.PasswordIncorrectError
-  | AppError.UnexpectedError,
+  LoginUseCaseErrors.InvalidCredentialsError |
+  LoginUseCaseErrors.UserNotFoundError |
+  LoginUseCaseErrors.PasswordIncorrectError |
+  AppError.UnexpectedError,
   LoginDTOResponse
 >;
 
@@ -50,6 +52,8 @@ export class LoginUseCase implements UseCase<LoginDTO, Promise<Response>> {
       if (!userFound) {
         return left(new LoginUseCaseErrors.UserNotFoundError());
       }
+
+      
 
       const passwordValid = await user.password.comparePassword(password.value);
 

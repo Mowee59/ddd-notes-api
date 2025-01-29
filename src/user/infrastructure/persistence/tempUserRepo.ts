@@ -1,4 +1,4 @@
-import { Injectable, NotImplementedException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { IUserRepo } from "../../domain/interfaces/user-repository.interface";
 import { User } from "src/user/domain/entities/user";
 import { UserEmail } from "src/user/domain/value-objects/userEmail";
@@ -12,8 +12,6 @@ export class TempUserRepo implements IUserRepo{
     User.create({
       email: UserEmail.create('test@test.com').getValue(),
       password: UserPassword.create({ value: 'password', hashed: false }).getValue(),
-      colorPreference: 'light',
-      fontPreference: 'sans-serif',
     }).getValue(),
   ];
 
@@ -27,5 +25,11 @@ export class TempUserRepo implements IUserRepo{
       return null;
     }
     return user;
+  }
+
+  
+
+  async save(user: User): Promise<void> {
+    this.users.push(user);
   }
 }

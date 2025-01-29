@@ -1,22 +1,29 @@
 import { TestingModule } from '@nestjs/testing';
 import { LoginUseCase } from './login.usecase';
 import { IUserRepo } from 'src/user/domain/interfaces/user-repository.interface';
-import { LoginUseCaseErrors } from './login-errors';
+import { LoginUseCaseErrors } from './login.errors';
 import { User } from 'src/user/domain/entities/user';
 import { LoginDTO } from 'src/user/application/use-cases/login/login-dto';
 import { Test } from '@nestjs/testing';
 import { UserEmail } from 'src/user/domain/value-objects/userEmail';
 import { UserPassword } from 'src/user/domain/value-objects/userPassword';
+import { AuthService } from '../../services/auth/auth.service';
+
+// TODO : rewrite tests
 
 describe('LoginUseCase', () => {
   let loginUseCase: LoginUseCase;
   let mockUserRepo: jest.Mocked<IUserRepo>;
+  let mockAuthService: jest.Mocked<AuthService>;
 
   beforeEach(async () => {
     mockUserRepo = {
       getUserByEmail: jest.fn(),
       exists: jest.fn(),
+      save: jest.fn(),
     };
+
+    
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [

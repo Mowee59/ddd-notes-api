@@ -6,10 +6,14 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './presentation/controllers/auth/auth.controller';
 import { JwtStrategy } from './infrastructure/auth';
 import { PassportModule } from '@nestjs/passport';
-
+import * as schema from 'src/drizzle/schemas';
+import { CreateUserUseCase } from './application/use-cases/create-user/create-user.usecase';
+import { SqlLiteUserRepo } from './infrastructure/persistence/sqlLiteUserRepo';
+import { DrizzleModule } from 'src/drizzle/drizzle.module';
 // TODO :  Use a secret key from env
 @Module({
   imports: [
+    DrizzleModule,
     PassportModule,
     JwtModule.register({
       global: true,
@@ -18,15 +22,23 @@ import { PassportModule } from '@nestjs/passport';
     }),
   ],
   providers: [
+    // Injecting the user repo
     {
       provide: 'IUserRepo',
-      useClass: TempUserRepo,
+      useClass: SqlLiteUserRepo,
+    },
+    // Injecting the user model
+    {
+      provide: 'USER_MODEL',
+      useValue: schema.baseUsers,
+
     },
     LoginUseCase,
+    CreateUserUseCase,
     AuthService,
     JwtStrategy,
   ],
   controllers: [AuthController],
-  exports: [LoginUseCase],
+  exports: [],
 })
 export class UserModule {}

@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 import { ValueObject } from '../../../shared/domain/ValueObject';
 import { Guard } from '../../../shared/core/Guard';
 import { Result } from '../../../shared/core/Result';
@@ -43,7 +43,9 @@ export class UserPassword extends ValueObject<IUserPassword> {
    */
   public async comparePassword(plainTextPassword: string): Promise<boolean> {
     let hashed: string;
+    console.log(this.isAlreadyHashed());
     if (this.isAlreadyHashed()) {
+      
       hashed = this.props.value;
       return this.bcryptCompare(plainTextPassword, hashed);
     } else {
@@ -61,13 +63,24 @@ export class UserPassword extends ValueObject<IUserPassword> {
 
   private hashPassword(password: string): Promise<string> {
     return new Promise((resolve, reject) => {
-      bcrypt.hash(password, null, (err, hash) => {
+      const SALT_ROUNDS = 10;
+      bcrypt.hash(password, SALT_ROUNDS, (err, hash) => {
         if (err) return reject(err);
         resolve(hash);
       });
     });
   }
 
+  public getHashedValue (): Promise<string> {
+    return new Promise((resolve) => {
+      if (this.isAlreadyHashed()) {
+        return resolve(this.props.value);
+      } else {
+        return resolve(this.hashPassword(this.props.value))
+      }
+    })
+  }
+  
   public static create(props: IUserPassword): Result<UserPassword> {
     const propsResult = Guard.againstNullOrUndefined(props.value, 'password');
 

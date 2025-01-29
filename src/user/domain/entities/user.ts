@@ -5,11 +5,11 @@ import { UserPassword } from '../value-objects/userPassword';
 import { Result } from 'src/shared/core/Result';
 import { AggregateRoot } from 'src/shared/domain/AggrehateRoot';
 
+// TODO : add is email verified
 interface UserProps {
   email: UserEmail;
   password: UserPassword;
-  colorPreference?: 'light' | 'dark' | 'system';
-  fontPreference?: 'sans-serif' | 'serif' | 'monospace';
+  
 }
 
 export class User extends AggregateRoot<UserProps> {
@@ -35,9 +35,7 @@ export class User extends AggregateRoot<UserProps> {
     const isNewUser = !!id === false;
     const user = new User(
       {
-        ...props,
-        colorPreference: props.colorPreference || 'system',
-        fontPreference: props.fontPreference || 'sans-serif',
+        ...props
       },
       id,
     );
