@@ -4,17 +4,24 @@ import { UserEmail } from '../value-objects/userEmail';
 import { UserPassword } from '../value-objects/userPassword';
 import { Result } from 'src/shared/core/Result';
 import { AggregateRoot } from 'src/shared/domain/AggrehateRoot';
+import { UserId } from '../value-objects/userId';
 
 // TODO : add is email verified
 interface UserProps {
   email: UserEmail;
   password: UserPassword;
-  
+  accessToken?: string;
+  refreshToken?: string;  
 }
 
 export class User extends AggregateRoot<UserProps> {
   constructor(props: UserProps, id?: UniqueEntityID) {
     super(props, id);
+  }
+
+  get userId(): UserId {
+    return UserId.create(this._id)
+      .getValue();
   }
 
   get password(): UserPassword {
@@ -23,6 +30,14 @@ export class User extends AggregateRoot<UserProps> {
 
   get email(): UserEmail {
     return this.props.email;
+  }
+
+  get accessToken(): string {
+    return this.props.accessToken;
+  }
+
+  get refreshToken(): string {
+    return this.props.refreshToken;
   }
 
   public static create(props: UserProps, id?: UniqueEntityID): Result<User> {
