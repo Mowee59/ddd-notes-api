@@ -43,7 +43,6 @@ export class UserPassword extends ValueObject<IUserPassword> {
    */
   public async comparePassword(plainTextPassword: string): Promise<boolean> {
     let hashed: string;
-    console.log(this.isAlreadyHashed());
     if (this.isAlreadyHashed()) {
       
       hashed = this.props.value;
