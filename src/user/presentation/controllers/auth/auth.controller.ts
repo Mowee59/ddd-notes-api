@@ -3,7 +3,7 @@ import { LoginUseCase } from '../../../application/use-cases/login/login.usecase
 import { LoginUseCaseErrors } from '../../../application/use-cases/login/login.errors';
 import { ResponseInterceptor } from 'src/shared/infrastructure/interceptors/response.interceptor';
 import { LoginRequestDTO } from './login.request.dto';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiResponse, getSchemaPath } from '@nestjs/swagger';
 import { LoginResponseDTO } from './login.response.dto';
 import { ApiOperation } from '@nestjs/swagger';
 import { RegisterRequestDTO } from './register.request.dto';
@@ -25,24 +25,89 @@ export class AuthController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'User logged in successfully',
-    type: LoginResponseDTO,
+    schema: {
+      type: 'object',
+      properties: {
+        type: { type: 'string', example: 'success' },
+        data: {
+          type: 'object',
+          properties: {
+            accessToken: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' },
+            refreshToken: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' }
+          }
+        }
+      }
+    }
   })
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
     description: 'Invalid credentials provided',
+    schema: {
+      type: 'object', 
+      properties: {
+        type: { type: 'string', example: 'error' },
+        error: {
+          type: 'object',
+          properties: {
+            status: { type: 'number', example: 400 },
+            message: { type: 'string', example: 'Invalid credentials provided' }
+          }
+        }
+      }
+    }
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
     description: 'User not found',
+    schema: {
+      type: 'object',
+      properties: {
+        type: { type: 'string', example: 'error' },
+        error: {
+          type: 'object',
+          properties: {
+            status: { type: 'number', example: 404 },
+            message: { type: 'string', example: 'User not found' }
+          }
+        }
+      }
+    }
   })
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
-    description: 'Password incorrect',
+    description: 'Password incorrect', 
+    schema: {
+      type: 'object',
+      properties: {
+        type: { type: 'string', example: 'error' },
+        error: {
+          type: 'object',
+          properties: {
+            status: { type: 'number', example: 401 },
+            message: { type: 'string', example: 'Password is incorrect' }
+          }
+        }
+      }
+    }
   })
   @ApiResponse({
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     description: 'Internal server error',
+    schema: {
+      type: 'object',
+      properties: {
+        type: { type: 'string', example: 'error' },
+        error: {
+          type: 'object',
+          properties: {
+            status: { type: 'number', example: 500 },
+            message: { type: 'string', example: 'An unexpected error occurred' }
+          }
+        }
+      }
+    }
   })
+
  // TODO : Add error for excessive fields
 
   public async login( @Body(ValidationPipe) loginDto: LoginRequestDTO) : Promise<LoginResponseDTO> {

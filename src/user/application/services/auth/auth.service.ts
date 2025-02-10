@@ -9,4 +9,8 @@ export class AuthService {
   signJWT(payload: JWTClaims): Promise<JWTToken> {
     return this.jwtService.signAsync(payload);
   }
+
+  // TODO: Implement refresh token method
+
+  
 }

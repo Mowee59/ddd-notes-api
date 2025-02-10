@@ -3,8 +3,9 @@ import { Guard } from 'src/shared/core/Guard';
 import { UserEmail } from '../value-objects/userEmail';
 import { UserPassword } from '../value-objects/userPassword';
 import { Result } from 'src/shared/core/Result';
-import { AggregateRoot } from 'src/shared/domain/AggrehateRoot';
+import { AggregateRoot } from 'src/shared/domain/AggregateRoot';
 import { UserId } from '../value-objects/userId';
+import { JWTToken, RefreshToken } from '../interfaces/jwt.interface';
 
 // TODO : add is email verified
 interface UserProps {
@@ -12,6 +13,7 @@ interface UserProps {
   password: UserPassword;
   accessToken?: string;
   refreshToken?: string;  
+  lastLogin?: Date;
 }
 
 export class User extends AggregateRoot<UserProps> {
@@ -65,4 +67,14 @@ export class User extends AggregateRoot<UserProps> {
 
     return Result.ok<User>(user);
   }
+
+  public setAccessToken(token: JWTToken, refreshToken?: RefreshToken): void {
+    // TODO : Handle refresh token
+    this.props.accessToken = token;
+    // this.props.refreshToken = refreshToken;
+    this.props.lastLogin = new Date();
+  }
+
+ 
+
 }
