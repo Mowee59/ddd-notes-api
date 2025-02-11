@@ -69,6 +69,11 @@ export class LoginUseCase implements UseCase<LoginDTO, Promise<Response>> {
         email: user.email.value,
       });
 
+      // TODO : Handle refresh token
+      user.setAccessToken(accessToken);
+
+      // TODO : Add a metod to save authenticated user for session 
+
       return right({
         accessToken,
         userEmail: user.email.value,
