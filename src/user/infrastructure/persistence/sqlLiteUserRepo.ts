@@ -42,10 +42,10 @@ export class SqlLiteUserRepo implements IUserRepo {
     return UserMap.toDomain(baseUser);
  }
 
- async getUserById(userId: UserId): Promise<User> {
+ async getUserById(userId: string): Promise<User> {
   const baseUser = await this.db.select()
     .from(this.userModel)
-    .where(eq(this.userModel.base_user_id, userId.getStringValue()))
+    .where(eq(this.userModel.base_user_id, userId))
     .get();
 
     if (!baseUser) {
@@ -64,6 +64,10 @@ export class SqlLiteUserRepo implements IUserRepo {
   }
   
   return
+ }
+
+ async delete(userId: string): Promise<void> {
+  await this.db.delete(this.userModel).where(eq(this.userModel.base_user_id, userId));
  }
 
 

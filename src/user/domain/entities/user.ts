@@ -75,6 +75,9 @@ export class User extends AggregateRoot<UserProps> {
     this.props.lastLogin = new Date();
   }
 
+  public delete() : void {
+    // TODO : Add domain event to delete user
+  }
  
 
 }

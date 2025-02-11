@@ -3,7 +3,7 @@ import { IUserRepo } from "../../domain/interfaces/user-repository.interface";
 import { User } from "src/user/domain/entities/user";
 import { UserEmail } from "src/user/domain/value-objects/userEmail";
 import { UserPassword } from "src/user/domain/value-objects/userPassword";
-import { UserId } from "src/user/domain/value-objects/userId";
+  import { UserId } from "src/user/domain/value-objects/userId";
 
 
 @Injectable()
@@ -28,12 +28,16 @@ export class TempUserRepo implements IUserRepo{
     return user;
   }
 
-  async getUserById(userId: UserId): Promise<User> {
-    const user = this.users.find((user) => user.id.equals(userId.getValue()));
+  async getUserById(userId: string): Promise<User> {
+    const user = this.users.find((user) => user.id.toString() === userId);
     if (!user) {
       return null;
     }
     return user;
+  }
+
+  async delete(userId: string): Promise<void> {
+    this.users = this.users.filter((user) => user.id.toString() !== userId);
   }
 
   
