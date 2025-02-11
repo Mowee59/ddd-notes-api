@@ -3,7 +3,7 @@ import { LoginUseCase } from '../../../application/use-cases/login/login.usecase
 import { LoginUseCaseErrors } from '../../../application/use-cases/login/login.errors';
 import { ResponseInterceptor } from 'src/shared/infrastructure/interceptors/response.interceptor';
 import { LoginRequestDTO } from './login.request.dto';
-import { ApiResponse, getSchemaPath } from '@nestjs/swagger';
+import { ApiResponse, ApiTags, getSchemaPath } from '@nestjs/swagger';
 import { LoginResponseDTO } from './login.response.dto';
 import { ApiOperation } from '@nestjs/swagger';
 import { RegisterRequestDTO } from './register.request.dto';
@@ -12,6 +12,7 @@ import { CreateUserUseCaseErrors } from 'src/user/application/use-cases/create-u
 
 // TODO : implement response consistent format
 @Controller('auth')
+@ApiTags('Autentication')
 @UseInterceptors(ResponseInterceptor)
 export class AuthController {
   constructor(

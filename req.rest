@@ -11,4 +11,4 @@ content-type: application/json
 
 ###
 
-DELETE http://localhost:3000/user/c2a3ad87-84bc-415b-995b-90b614796a47
+DELETE http://localhost:3000/user/65f92c3c-e3d6-4f99-b05c-ea86eedcd523
