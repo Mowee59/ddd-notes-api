@@ -1,14 +1,9 @@
 # When password is empty = 500 error, correct this
 
-POST http://localhost:3000/auth/login
+POST http://localhost:3000/auth/register
 content-type: application/json
 
 {
   "email": "test@test.com",
   "password": "password"
-  
 }
-
-###
-
-DELETE http://localhost:3000/user/65f92c3c-e3d6-4f99-b05c-ea86eedcd523

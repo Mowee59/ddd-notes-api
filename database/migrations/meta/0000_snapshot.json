@@ -1,8 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "b6f2a933-d24a-4561-8318-d92c864a63b8",
-  "prevId": "2c0a4707-084e-45fd-9dcc-7304218294a5",
+  "id": "dc24654d-c347-4e68-bcb9-49cc82126327",
+  "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "baseUsers": {
       "name": "baseUsers",
@@ -41,11 +41,7 @@
   "_meta": {
     "schemas": {},
     "tables": {},
-    "columns": {
-      "\"baseUsers\".\"id\"": "\"baseUsers\".\"base_user_id\"",
-      "\"baseUsers\".\"email\"": "\"baseUsers\".\"user_email\"",
-      "\"baseUsers\".\"password\"": "\"baseUsers\".\"user_password\""
-    }
+    "columns": {}
   },
   "internal": {
     "indexes": {}

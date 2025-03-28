@@ -14,14 +14,23 @@ import { AuthService } from '../../services/auth/auth.service';
 describe('LoginUseCase', () => {
   let loginUseCase: LoginUseCase;
   let mockUserRepo: jest.Mocked<IUserRepo>;
-  let mockAuthService: jest.Mocked<AuthService>;
+  let mockAuthService: Partial<AuthService>;
 
   beforeEach(async () => {
     mockUserRepo = {
       getUserByEmail: jest.fn(),
       exists: jest.fn(),
       save: jest.fn(),
+      getUserById: jest.fn(),
+      delete: jest.fn(),
     };
+
+    mockAuthService = {
+      signJWT: jest.fn().mockResolvedValue('mock.jwt.token')
+    };
+
+     // Create mock for AuthService
+
 
     
 
@@ -29,6 +38,7 @@ describe('LoginUseCase', () => {
       providers: [
         LoginUseCase,
         { provide: 'IUserRepo', useValue: mockUserRepo },
+        { provide: AuthService, useValue: mockAuthService },
       ],
     }).compile();
 
@@ -134,8 +144,10 @@ describe('LoginUseCase', () => {
     const response = await loginUseCase.execute(loginDto);
 
     expect(response.isRight()).toBe(true);
-    expect(response.value).toBeInstanceOf(User);
-
-    expect(response.value).toBe(user);
+    expect(response.value).toEqual({
+      accessToken: 'mock.jwt.token',
+      userEmail: loginDto.email
+    });
+   
   });
 });
