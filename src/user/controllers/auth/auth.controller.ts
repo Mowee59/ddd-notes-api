@@ -1,13 +1,13 @@
 import { Controller, Post, HttpStatus, Res, Body, ValidationPipe, HttpException, UseInterceptors, NotImplementedException } from '@nestjs/common';
-import { LoginUseCase } from '../../../application/use-cases/login/login.usecase';
-import { LoginUseCaseErrors } from '../../../application/use-cases/login/login.errors';
+import { LoginUseCase } from 'src/user/application/use-cases/login/login.usecase';
+import { LoginUseCaseErrors } from 'src/user/application/use-cases/login/login.errors';
 import { ResponseInterceptor } from 'src/shared/infrastructure/interceptors/response.interceptor';
 import { LoginRequestDTO } from './login.request.dto';
 import { ApiResponse, ApiTags, getSchemaPath } from '@nestjs/swagger';
 import { LoginResponseDTO } from './login.response.dto';
 import { ApiOperation } from '@nestjs/swagger';
 import { RegisterRequestDTO } from './register.request.dto';
-import { CreateUserUseCase } from '../../../application/use-cases/create-user/create-user.usecase';
+import { CreateUserUseCase } from 'src/user/application/use-cases/create-user/create-user.usecase';
 import { CreateUserUseCaseErrors } from 'src/user/application/use-cases/create-user/create-user.errors';
 
 // TODO : implement response consistent format

@@ -1,5 +1,5 @@
 import { Expose } from "class-transformer";
-import { LoginDTO } from "../../../application/use-cases/login/login-dto";
+import { LoginDTO } from "src/user/application/use-cases/login/login-dto";
 import { IsNotEmpty } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 
